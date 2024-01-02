@@ -4,7 +4,6 @@ import Logger from '../../../pkg/logger'
 import statusCode from '../../../pkg/statusCode'
 import { RequestBody } from '../entity/interface'
 import Repository from '../repository/mysql/repository'
-import { scheduleJob } from 'node-schedule'
 
 class Usecase {
     constructor(private logger: Logger, private repository: Repository) {}

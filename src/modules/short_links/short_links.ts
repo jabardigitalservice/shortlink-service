@@ -32,7 +32,7 @@ class ShortLinks {
         const Router = this.http.Router()
 
         Router.post('/shorten', handler.Store())
-        Router.get('/:shortCode', handler.FindByShortCode())
+        Router.get('/:shortCode', handler.RedirectLink())
 
         this.http.SetRouter('/', Router)
     }

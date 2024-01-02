@@ -13,7 +13,7 @@ class Handler {
         private usecase: Usecase
     ) {}
 
-    public FindByShortCode() {
+    public RedirectLink() {
         return async (req: any, res: Response, next: NextFunction) => {
             try {
                 const data = await this.usecase.FindByShortCode(
