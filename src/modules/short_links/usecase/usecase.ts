@@ -18,8 +18,6 @@ class Usecase {
                 statusCode[statusCode.NOT_FOUND]
             )
 
-        console.log(new Date(result.expired) <= new Date())
-
         if (result.expired && new Date(result.expired) <= new Date()) {
             this.repository.Delete(result.id)
             throw new error(
