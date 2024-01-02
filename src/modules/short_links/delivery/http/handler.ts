@@ -13,19 +13,21 @@ class Handler {
         private usecase: Usecase
     ) {}
 
-    public FindByAlias() {
+    public FindByShortCode() {
         return async (req: any, res: Response, next: NextFunction) => {
             try {
-                const data = await this.usecase.FindByAlias(req.params.alias)
+                const data = await this.usecase.FindByShortCode(
+                    req.params.shortCode
+                )
                 this.logger.Info(statusCode[statusCode.OK], {
                     additional_info: this.http.AdditionalInfo(
                         req,
                         statusCode.OK
                     ),
-                    short_links: { FindByAlias: data },
+                    short_links: { FindByShortCode: data },
                 })
 
-                return res.redirect(data.original)
+                return res.redirect(data.url)
             } catch (error) {
                 return next(error)
             }
@@ -47,7 +49,7 @@ class Handler {
                 return res.status(statusCode.CREATED).json({
                     data: {
                         short_link:
-                            this.http.GetDomain(req) + '/' + result.alias,
+                            this.http.GetDomain(req) + '/' + result.short_code,
                     },
                 })
             } catch (error) {

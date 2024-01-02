@@ -11,7 +11,7 @@ export async function up(queryInterface: QueryInterface) {
                 type: DataTypes.UUID,
                 defaultValue: DataTypes.UUIDV4,
             },
-            alias: {
+            short_code: {
                 type: DataTypes.STRING,
                 allowNull: false,
             },
@@ -23,6 +23,10 @@ export async function up(queryInterface: QueryInterface) {
                 type: DataTypes.INTEGER,
                 allowNull: false,
                 defaultValue: 0,
+            },
+            expired: {
+                type: DataTypes.DATE,
+                allowNull: true,
             },
             created_at: {
                 type: DataTypes.DATE,
@@ -36,7 +40,7 @@ export async function up(queryInterface: QueryInterface) {
             },
         })
         .then(() => {
-            return queryInterface.addIndex(tableName, ['alias'])
+            return queryInterface.addIndex(tableName, ['short_code'])
         })
 }
 

@@ -5,9 +5,9 @@ import { Schema } from '../../../../database/sequelize/interface'
 class Repository {
     constructor(private logger: Logger, private schema: Schema) {}
 
-    public async FindByAlias(alias: string) {
+    public async FindByShortCode(short_code: string) {
         const item = await this.schema.short_link.findOne({
-            where: { alias },
+            where: { short_code },
         })
 
         return item
@@ -22,7 +22,15 @@ class Repository {
 
     public async Store(body: RequestBody) {
         return this.schema.short_link.create({
-            ...body,
+            url: body.url,
+            short_code: body.short_link,
+            expired: body.expired,
+        })
+    }
+
+    public async Delete(id: string) {
+        await this.schema.short_link.destroy({
+            where: { id },
         })
     }
 }

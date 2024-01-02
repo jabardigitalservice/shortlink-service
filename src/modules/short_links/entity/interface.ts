@@ -1,4 +1,5 @@
 export interface RequestBody {
     url: string
-    alias: string
+    short_link: string
+    expired: Date
 }

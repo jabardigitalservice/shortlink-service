@@ -14,12 +14,10 @@ This repository houses the Short Link Service, a tool for creating and managing 
 
 ## API Endpoints:
 - Create Short Link:
-  - POST /api/shorten
-  - Payload: { "url": "your-long-url", "alias": "custom-alias" (OPTIONAL) }
-- Get Short Link Details:
-  - GET /api/links/:shortCode
-- Get Analytics:
-  - GET /api/links/:shortCode/analytics
+  - POST /shorten
+  - Payload: { "url": "your-long-url", "short_link": "custom-short-link" (OPTIONAL), "expired": "your-set-expired" }
+- Redirect by Short link:
+  - GET /:shortCode
 
 ## Tech Stack
 

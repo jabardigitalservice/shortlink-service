@@ -10,7 +10,7 @@ const ShortLink = (connection: Connection) => {
                 type: DataTypes.UUID,
                 defaultValue: DataTypes.UUIDV4,
             },
-            alias: {
+            short_code: {
                 type: DataTypes.STRING,
                 allowNull: false,
             },
@@ -22,6 +22,10 @@ const ShortLink = (connection: Connection) => {
                 type: DataTypes.INTEGER,
                 allowNull: false,
                 defaultValue: 0,
+            },
+            expired: {
+                type: DataTypes.DATE,
+                allowNull: true,
             },
         },
         {
