@@ -1,9 +1,8 @@
 import Http from '../../../../transport/http/http'
 import Logger from '../../../../pkg/logger'
 import Usecase from '../../usecase/usecase'
-import { NextFunction, Request, Response } from 'express'
+import { NextFunction, Response } from 'express'
 import statusCode from '../../../../pkg/statusCode'
-import { GetMeta, GetRequestParams } from '../../../../helpers/requestParams'
 import { ValidateFormRequest } from '../../../../helpers/validate'
 import { RequestSchema } from '../../entity/schema'
 
@@ -14,19 +13,19 @@ class Handler {
         private usecase: Usecase
     ) {}
 
-    public Fetch() {
-        return async (req: Request, res: Response, next: NextFunction) => {
+    public FindByAlias() {
+        return async (req: any, res: Response, next: NextFunction) => {
             try {
-                const request = GetRequestParams(req.query)
-                const { data, count } = await this.usecase.Fetch(request)
+                const data = await this.usecase.FindByAlias(req.params.alias)
                 this.logger.Info(statusCode[statusCode.OK], {
                     additional_info: this.http.AdditionalInfo(
                         req,
                         statusCode.OK
                     ),
+                    short_links: { FindByAlias: data },
                 })
 
-                return res.json({ data, meta: GetMeta(request, count) })
+                return res.redirect(data.original)
             } catch (error) {
                 return next(error)
             }
@@ -43,10 +42,14 @@ class Handler {
                         req,
                         statusCode.CREATED
                     ),
+                    short_links: { store: body },
                 })
-                return res
-                    .status(statusCode.CREATED)
-                    .json({ data: result.toJSON(), message: 'CREATED' })
+                return res.status(statusCode.CREATED).json({
+                    data: {
+                        short_link:
+                            this.http.GetDomain(req) + '/' + result.alias,
+                    },
+                })
             } catch (error) {
                 return next(error)
             }

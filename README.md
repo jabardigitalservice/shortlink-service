@@ -1,10 +1,25 @@
-# Boilerplate Clean Architecture for Node.js
+# Short Link Service
 
-![Node.js Logo](https://nodejs.org/static/images/logo.svg)
+This repository houses the Short Link Service, a tool for creating and managing short links (URLs). Whether you need concise URLs for marketing campaigns or improved user experience, this service simplifies the process of generating and handling short links.
 
-This boilerplate provides a foundation for Node.js applications using Clean Architecture principles. It utilizes a tech stack including Mongoose, Sequelize, TypeScript, and Docker. The default HTTP framework is Express.
+## Features:
+- Short Link Generation:
+  - Create short links for long URLs effortlessly.
+- Customization:
+  - Optionally customize short link aliases for branding or meaningful links.
+- Analytics:
+  - Track and analyze short link usage with built-in analytics.
+- Expiration:
+  - Set expiration dates for short links to control their validity.
 
-[![GitHub Repository](https://img.shields.io/badge/GitHub-Repository-blue?logo=github)](https://github.com/ayocodingit/boilerplate-clean-architecture)
+## API Endpoints:
+- Create Short Link:
+  - POST /api/shorten
+  - Payload: { "url": "your-long-url", "alias": "custom-alias" (OPTIONAL) }
+- Get Short Link Details:
+  - GET /api/links/:shortCode
+- Get Analytics:
+  - GET /api/links/:shortCode/analytics
 
 ## Tech Stack
 
@@ -29,13 +44,13 @@ The project follows the principles of Clean Architecture, emphasizing separation
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/ayocodingit/boilerplate-clean-architecture.git
+   git clone https://github.com/jabardigitalservice/shortlink-service.git
    ```
 
 2. Navigate to the project directory:
 
    ```bash
-   cd boilerplate-clean-architecture
+   cd shortlink-service
    ```
 
 3. Install dependencies:
@@ -45,13 +60,6 @@ The project follows the principles of Clean Architecture, emphasizing separation
    ```
 
 4. Copy the appropriate environment file:
-
-   - For MongoDB, use `.env.example.mongo`:
-
-     ```bash
-     cp .env.example.mongo .env
-     ```
-
    - For SQL (choose MySQL, PostgreSQL, or SQLite), use `.env.example.sql`:
 
      ```bash
@@ -119,7 +127,7 @@ docker run -p 3000:3000 -d your-image-name
 - **Local Database Migration (development):**
   - Generate migration file:
     ```bash
-    npm run migration:generate --name your-migration-name
+    npm run migration:generate --name=your-migration-name
     ```
   - Run migrations:
     ```bash
@@ -133,14 +141,14 @@ docker run -p 3000:3000 -d your-image-name
 - **Seed:**
   - Run Seed:
     ```bash
-    npm run seed:run --name your-seed-filename
+    npm run seed:run --name=your-seed-filename
     ```
 
 
 - **Cron:**
   - Run Cron:
     ```bash
-    npm run seed:run --name your-cron-filename
+    npm run seed:run --name=your-cron-filename
     ```
 
 - **Testing:**
@@ -175,3 +183,16 @@ modules/
     │   └── usecase.ts
     └── name module.ts // for init the module to load in the main
 ```
+
+## Contributing:
+
+We welcome contributions! Please read CONTRIBUTING.md for details on our code of conduct and the process for submitting pull requests.
+
+## License:
+
+This project is licensed under the MIT License - see the LICENSE file for details.
+Support:
+
+## For support or issues, please open an issue.
+
+Feel free to customize this README to reflect your specific Short Link Service implementation.

@@ -1,8 +1,8 @@
 import { Config } from '../../config/config.interface'
 import Logger from '../../pkg/logger'
 import { Sequelize as createConnection, Dialect } from 'sequelize'
-import Post from './schemas/post.schema'
 import { Connection } from './interface'
+import ShortLink from './schemas/short_link.schema'
 
 class Sequalize {
     public static async Connect(config: Config, logger: Logger) {
@@ -40,12 +40,12 @@ class Sequalize {
 
     public static Schema = (connection: Connection) => {
         // load all schema on folder schemas
-        const post = Post(connection)
+        const short_link = ShortLink(connection)
 
         // setup relation for eager loader in here
         // example: User.hasOne(Profile)
         return {
-            post,
+            short_link,
             // Add other models if needed
         }
     }

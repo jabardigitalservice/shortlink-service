@@ -1,35 +1,35 @@
 import { DataTypes } from 'sequelize'
 import { Connection } from '../interface'
 
-const schema = (connection: Connection) => {
+const ShortLink = (connection: Connection) => {
     return connection.define(
-        'posts',
+        'short_links',
         {
             id: {
                 primaryKey: true,
                 type: DataTypes.UUID,
                 defaultValue: DataTypes.UUIDV4,
             },
-            title: {
+            alias: {
                 type: DataTypes.STRING,
-            },
-            description: {
-                type: DataTypes.STRING,
-            },
-            created_at: {
-                type: DataTypes.DATE,
-                defaultValue: new Date(),
-            },
-            updated_at: {
-                type: DataTypes.DATE,
                 allowNull: false,
-                defaultValue: new Date(),
+            },
+            url: {
+                type: DataTypes.STRING,
+                allowNull: false,
+            },
+            clicks: {
+                type: DataTypes.INTEGER,
+                allowNull: false,
+                defaultValue: 0,
             },
         },
         {
-            timestamps: false,
+            timestamps: true,
+            createdAt: 'created_at',
+            updatedAt: 'updated_at',
         }
     )
 }
 
-export default schema
+export default ShortLink
