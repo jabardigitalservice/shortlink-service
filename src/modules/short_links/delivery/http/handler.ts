@@ -5,6 +5,7 @@ import { NextFunction, Response } from 'express'
 import statusCode from '../../../../pkg/statusCode'
 import { ValidateFormRequest } from '../../../../helpers/validate'
 import { RequestSchema } from '../../entity/schema'
+import { GetImageUrl } from '../../../../helpers/http'
 
 class Handler {
     constructor(
@@ -26,6 +27,12 @@ class Handler {
                     ),
                     short_links: { FindByShortCode: data },
                 })
+
+                const image = await GetImageUrl(data.url)
+                if (image) {
+                    res.setHeader('Content-Type', image.content_type)
+                    return res.send(image.data)
+                }
 
                 return res.redirect(data.url)
             } catch (error) {

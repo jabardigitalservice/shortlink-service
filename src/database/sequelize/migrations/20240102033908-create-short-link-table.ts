@@ -45,5 +45,5 @@ export async function up(queryInterface: QueryInterface) {
 }
 
 export async function down(queryInterface: QueryInterface) {
-    return queryInterface.dropDatabase(tableName)
+    return queryInterface.dropTable(tableName)
 }
