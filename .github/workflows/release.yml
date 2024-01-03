@@ -1,38 +1,47 @@
-name: Build-push
-
+name: Release to Production
 on:
   push:
-    branches: [main]
-
+    branches:
+      - master
+  workflow_dispatch:
 jobs:
-  deploy:
+  setup-build-publish-deploy:
     name: Setup, Build, Publish, and Deploy
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
+    - name: Checkout
+      uses: actions/checkout@master
 
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v2
+    - name: Set up QEMU
+      uses: docker/setup-qemu-action@v2
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
 
-      # Configure Docker with Credentials
-      - name: Configure Docker
-        run: |
-          docker login ${{ secrets.REGISTRY_URL }} -u ${{ secrets.REGISTRY_USERNAME }} -p "${{ secrets.REGISTRY_PASSWORD }}"
+    # Setup gcloud CLI
+    - name: Authenticate to Google Cloud
+      id: auth
+      uses: google-github-actions/auth@v0
+      with:
+        credentials_json: ${{ secrets.GCLOUD_SA_CREDENTIALS }}
 
-      # Build the Docker image
-      - name: Set version tag
-        id: vars
-        run: echo "sha_short=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
+    # Install gcloud, `setup-gcloud` automatically picks up authentication from `auth`.
+    - uses: google-github-actions/setup-gcloud@v0
+      name: 'Set up Cloud SDK'
 
-      - name: Build and push
-        id: docker_build
-        uses: docker/build-push-action@v4
-        with:
-          file: docker/Dockerfile
-          context: .
-          push: true
-          tags: ${{ secrets.SERVICE_IMAGENAME }}:${{ env.sha_short }}
+    # Configure Docker with Credentials
+    - name: Configure Docker
+      run: |
+        gcloud auth configure-docker asia-southeast2-docker.pkg.dev
+
+    # Build the Docker image
+    - name: Set version tag
+      id: vars
+      run: echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
+
+    - name: Build and push
+      id: docker_build
+      uses: docker/build-push-action@v2
+      with:
+        push: true
+        tags: ${{ secrets.DOCKER_IMAGENAME }}:${{ steps.vars.outputs.sha_short }}
