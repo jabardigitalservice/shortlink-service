@@ -1,5 +1,5 @@
 #app
-APP_NAME=Clean Architecture
+APP_NAME=Short Link Service
 APP_ENV=local
 APP_PORT_HTTP=3000
 APP_LOG=info

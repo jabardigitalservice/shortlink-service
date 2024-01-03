@@ -1,20 +1,31 @@
-import { QueryInterface, DataTypes, Sequelize } from 'sequelize'
+import { DataTypes, QueryInterface, Sequelize } from 'sequelize'
 
-module.exports = {
-    async up(queryInterface: QueryInterface) {
-        await queryInterface.createTable('posts', {
+const tableName = 'short_links'
+
+export async function up(queryInterface: QueryInterface) {
+    return queryInterface
+        .createTable(tableName, {
             id: {
                 allowNull: false,
                 primaryKey: true,
                 type: DataTypes.UUID,
                 defaultValue: DataTypes.UUIDV4,
             },
-            title: {
+            short_code: {
                 type: DataTypes.STRING,
                 allowNull: false,
             },
-            description: {
+            url: {
                 type: DataTypes.STRING,
+                allowNull: false,
+            },
+            clicks: {
+                type: DataTypes.INTEGER,
+                allowNull: false,
+                defaultValue: 0,
+            },
+            expired: {
+                type: DataTypes.DATE,
                 allowNull: true,
             },
             created_at: {
@@ -28,11 +39,11 @@ module.exports = {
                 defaultValue: Sequelize.literal('CURRENT_TIMESTAMP()'),
             },
         })
+        .then(() => {
+            return queryInterface.addIndex(tableName, ['short_code'])
+        })
+}
 
-        return queryInterface.addIndex('posts', ['title'])
-    },
-
-    async down(queryInterface: QueryInterface) {
-        return queryInterface.dropTable('posts')
-    },
+export async function down(queryInterface: QueryInterface) {
+    return queryInterface.dropDatabase(tableName)
 }
