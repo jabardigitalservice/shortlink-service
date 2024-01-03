@@ -16,7 +16,7 @@ export async function up(queryInterface: QueryInterface) {
                 allowNull: false,
             },
             url: {
-                type: DataTypes.STRING,
+                type: DataTypes.TEXT,
                 allowNull: false,
             },
             clicks: {

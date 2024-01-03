@@ -15,7 +15,7 @@ const ShortLink = (connection: Connection) => {
                 allowNull: false,
             },
             url: {
-                type: DataTypes.STRING,
+                type: DataTypes.TEXT,
                 allowNull: false,
             },
             clicks: {
