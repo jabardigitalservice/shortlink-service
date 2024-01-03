@@ -1,0 +1,38 @@
+name: Build-push
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    name: Setup, Build, Publish, and Deploy
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      # Configure Docker with Credentials
+      - name: Configure Docker
+        run: |
+          docker login ${{ secrets.REGISTRY_URL }} -u ${{ secrets.REGISTRY_USERNAME }} -p "${{ secrets.REGISTRY_PASSWORD }}"
+
+      # Build the Docker image
+      - name: Set version tag
+        id: vars
+        run: echo "sha_short=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
+
+      - name: Build and push
+        id: docker_build
+        uses: docker/build-push-action@v4
+        with:
+          file: docker/Dockerfile
+          context: .
+          push: true
+          tags: ${{ secrets.SERVICE_IMAGENAME }}:${{ env.sha_short }}
