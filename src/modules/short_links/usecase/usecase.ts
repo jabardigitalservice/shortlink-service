@@ -4,7 +4,6 @@ import Logger from '../../../pkg/logger'
 import statusCode from '../../../pkg/statusCode'
 import { RequestBody } from '../entity/interface'
 import Repository from '../repository/mysql/repository'
-import { v4 as uuidv4 } from 'uuid'
 
 class Usecase {
     constructor(private logger: Logger, private repository: Repository) {}
@@ -32,7 +31,7 @@ class Usecase {
     }
 
     public async Store(body: RequestBody) {
-        if (!body.short_link) body.short_link = uuidv4()
+        if (!body.short_link) body.short_link = this.generateRandomString(6)
         const result = await this.repository.FindByShortCode(body.short_link)
 
         if (result)
@@ -42,6 +41,19 @@ class Usecase {
             )
 
         return this.repository.Store(body)
+    }
+
+    private generateRandomString(length: number) {
+        const characters =
+            'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
+        let randomString = ''
+
+        for (let i = 0; i < length; i++) {
+            const randomIndex = Math.floor(Math.random() * characters.length)
+            randomString += characters.charAt(randomIndex)
+        }
+
+        return randomString
     }
 }
 
