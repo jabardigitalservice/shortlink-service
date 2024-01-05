@@ -4,6 +4,7 @@ import Logger from '../../../pkg/logger'
 import statusCode from '../../../pkg/statusCode'
 import { RequestBody } from '../entity/interface'
 import Repository from '../repository/mysql/repository'
+import { v4 as uuidv4 } from 'uuid'
 
 class Usecase {
     constructor(private logger: Logger, private repository: Repository) {}
@@ -31,6 +32,7 @@ class Usecase {
     }
 
     public async Store(body: RequestBody) {
+        if (!body.short_link) body.short_link = uuidv4()
         const result = await this.repository.FindByShortCode(body.short_link)
 
         if (result)
