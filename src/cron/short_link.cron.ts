@@ -15,9 +15,7 @@ const run = async () => {
             },
         })
 
-        logger.Info(
-            'successfully deleted expired data, count data: ' + counter
-        )
+        logger.Info('successfully deleted expired data, count data: ' + counter)
     } catch (error: any) {
         logger.Error(error.message)
     }
