@@ -33,6 +33,7 @@ class ShortLinks {
 
         Router.post('/shorten', handler.Store())
         Router.get('/:shortCode', handler.RedirectLink())
+        Router.get('/:shortCode/analytic', handler.Show())
 
         this.http.SetRouter('/', Router)
     }

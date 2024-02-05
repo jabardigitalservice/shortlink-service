@@ -30,6 +30,18 @@ class Usecase {
         return result
     }
 
+    public async Show(short_link: string) {
+        const result = await this.repository.FindByShortCode(short_link)
+
+        if (!result)
+            throw new error(
+                statusCode.NOT_FOUND,
+                statusCode[statusCode.NOT_FOUND]
+            )
+
+        return result
+    }
+
     public async Store(body: RequestBody) {
         if (!body.short_link) body.short_link = this.generateRandomString(6)
         const result = await this.repository.FindByShortCode(body.short_link)
