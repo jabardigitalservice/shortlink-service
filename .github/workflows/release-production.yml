@@ -6,7 +6,7 @@ on:
 
 jobs:
   deploy:
-    name: Setup, Build, Publish, and Deploy
+    name: ⚙️ 🚀 Setup, Build, Publish, and Deploy
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -38,7 +38,7 @@ jobs:
           tags: ${{ secrets.SERVICE_IMAGENAME }}:${{ env.sha_short }}
 
       # GitOps
-      - name: GitOps ArgoCD Setup
+      - name: 🧨🧨🧨 GitOps ArgoCD Setup
         run: |
           echo "${{ secrets.GITLAB_ARGOCD_KEY }}" > /tmp/gitlab-deploy-ssh-key
           chmod 600 /tmp/gitlab-deploy-ssh-key
