@@ -6,7 +6,7 @@ on:
 
 jobs:
   deploy:
-    name: ⚙️ 🚀 Setup, Build, Publish, and Deploy
+    name: ⚙️ 🚀 🏋🏼 Setup, Build, Publish, and Deploy
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -49,6 +49,11 @@ jobs:
         uses: mikefarah/yq@master
         with:
           cmd: yq -i '.spec.template.spec.containers[0].image = "${{ secrets.SERVICE_IMAGENAME }}:${{ env.sha_short }}"' 'jds-terraform-gke/k8s/digiteam-shortlink/deployment.yaml'
+
+      - name: GitOps ArgoCD Update Image Tag Shortlink Cronjob Production
+        uses: mikefarah/yq@master
+        with:
+          cmd: yq -i '.spec.template.spec.containers[0].image = "${{ secrets.SERVICE_IMAGENAME }}:${{ env.sha_short }}"' 'jds-terraform-gke/k8s/digiteam-shortlink/cronjob.yaml'
 
       - name: GitOps ArgoCD Create Branch, Commit, Push
         run: |
