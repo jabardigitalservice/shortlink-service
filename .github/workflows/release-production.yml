@@ -53,7 +53,7 @@ jobs:
       - name: GitOps ArgoCD Update Image Tag Shortlink Cronjob Production
         uses: mikefarah/yq@master
         with:
-          cmd: yq -i '.spec.template.spec.containers[0].image = "${{ secrets.SERVICE_IMAGENAME }}:${{ env.sha_short }}"' 'jds-terraform-gke/k8s/digiteam-shortlink/cronjob.yaml'
+          cmd: yq -i '.spec.jobTemplate.spec.template.spec.containers[0].image = "${{ secrets.SERVICE_IMAGENAME }}:${{ env.sha_short }}"' 'jds-terraform-gke/k8s/digiteam-shortlink/cronjob.yaml'
 
       - name: GitOps ArgoCD Create Branch, Commit, Push
         run: |
