@@ -60,9 +60,9 @@ class Repository {
                         short_code: {
                             [this.schema.Op.like]: `%${keyword}%`,
                         },
-                        url: {
-                            [this.schema.Op.like]: `%${keyword}%`,
-                        },
+                        // url: {
+                        //     [this.schema.Op.like]: `%${keyword}%`,
+                        // },
                     },
                 ],
             })
@@ -71,6 +71,8 @@ class Repository {
         if (['created_at', 'title', 'short_code'].includes(sort_by)) {
             order.push(...[sort_by, sort_order])
         }
+
+        console.log(filter)
 
         const { count, rows } = await this.schema.short_link.findAndCountAll({
             limit: per_page,

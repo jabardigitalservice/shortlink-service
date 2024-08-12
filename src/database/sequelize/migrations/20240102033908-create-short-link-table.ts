@@ -13,7 +13,8 @@ export async function up(queryInterface: QueryInterface) {
             },
             title: {
                 type: DataTypes.STRING,
-                allowNull: true,
+                allowNull: false,
+                defaultValue: '',
             },
             is_active: {
                 type: DataTypes.BOOLEAN,

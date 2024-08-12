@@ -7,4 +7,5 @@ export const RequestSchema = Joi.object({
     url: Joi.string().custom(uriWithSpaces).required(),
     expired: Joi.date().min(new Date()).optional(),
     is_active: Joi.boolean().optional().default(true),
+    title: Joi.string().alphanum().optional().default(''),
 })
