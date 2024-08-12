@@ -38,7 +38,7 @@ class Repository {
     }
 
     public async Fetch({
-        per_page,
+        limit,
         offset,
         is_active,
         keyword,
@@ -46,7 +46,6 @@ class Repository {
         sort_by,
     }: RequestParams) {
         const filter = {}
-        const order = []
 
         if (is_active) Object.assign(filter, { is_active })
 
@@ -57,28 +56,30 @@ class Repository {
                         title: {
                             [this.schema.Op.like]: `%${keyword}%`,
                         },
+                    },
+                    {
                         short_code: {
                             [this.schema.Op.like]: `%${keyword}%`,
                         },
-                        // url: {
-                        //     [this.schema.Op.like]: `%${keyword}%`,
-                        // },
+                    },
+                    {
+                        url: {
+                            [this.schema.Op.like]: `%${keyword}%`,
+                        },
                     },
                 ],
             })
         }
 
-        if (['created_at', 'title', 'short_code'].includes(sort_by)) {
-            order.push(...[sort_by, sort_order])
+        if (!['created_at', 'title', 'short_code'].includes(sort_by)) {
+            sort_by = 'created_at'
         }
 
-        console.log(filter)
-
         const { count, rows } = await this.schema.short_link.findAndCountAll({
-            limit: per_page,
+            limit,
             offset: offset,
             where: filter,
-            order,
+            order: [[sort_by, sort_order]],
         })
 
         return {

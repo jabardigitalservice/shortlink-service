@@ -12,8 +12,7 @@ const ShortLink = (connection: Connection) => {
             },
             title: {
                 type: DataTypes.STRING,
-                allowNull: false,
-                defaultValue: '',
+                allowNull: true,
             },
             is_active: {
                 type: DataTypes.BOOLEAN,
