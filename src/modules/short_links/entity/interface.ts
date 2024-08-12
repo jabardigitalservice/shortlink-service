@@ -1,5 +1,6 @@
-export interface RequestBody {
+export type RequestBody = {
     url: string
-    short_link: string
+    short_code: string
     expired: Date
+    is_active: true
 }

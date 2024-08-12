@@ -3,7 +3,6 @@ import {
     RegexSubdomain,
     RegexSanitize,
     RegexObjectID,
-    RegexContentTypeImage,
 } from './regex'
 
 describe('RegexWordScript', () => {
@@ -57,33 +56,5 @@ describe('RegexObjectID Test', () => {
     test('Empty string should not match the regex', () => {
         const emptyString = ''
         expect(emptyString).not.toMatch(RegexObjectID)
-    })
-})
-
-describe('RegexContentTypeImage', () => {
-    it('should match valid image content type', () => {
-        const validContentTypes = [
-            'image/jpeg',
-            'image/png',
-            'image/gif',
-            'image/svg+xml',
-        ]
-
-        validContentTypes.forEach((contentType) => {
-            expect(RegexContentTypeImage.test(contentType)).toBe(true)
-        })
-    })
-
-    it('should not match invalid content types', () => {
-        const invalidContentTypes = [
-            'text/plain',
-            'application/json',
-            'image',
-            '',
-        ]
-
-        invalidContentTypes.forEach((contentType) => {
-            expect(RegexContentTypeImage.test(contentType)).toBe(false)
-        })
     })
 })

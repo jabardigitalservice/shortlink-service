@@ -5,7 +5,8 @@ import { NextFunction, Response } from 'express'
 import statusCode from '../../../../pkg/statusCode'
 import { ValidateFormRequest } from '../../../../helpers/validate'
 import { RequestSchema } from '../../entity/schema'
-import { GetImageUrl } from '../../../../helpers/http'
+import { GetObjectUrl } from '../../../../helpers/http'
+import { GetMeta, GetRequestParams } from '../../../../helpers/requestParams'
 
 class Handler {
     constructor(
@@ -25,13 +26,12 @@ class Handler {
                         req,
                         statusCode.OK
                     ),
-                    short_links: { FindByShortCode: data },
                 })
 
-                const image = await GetImageUrl(data.url)
-                if (image) {
-                    res.setHeader('Content-Type', image.content_type)
-                    return res.send(image.data)
+                const file = await GetObjectUrl(data.url)
+                if (file) {
+                    res.setHeader('Content-Type', file.content_type)
+                    return res.send(file.data)
                 }
 
                 return res.redirect(data.url)
@@ -60,6 +60,25 @@ class Handler {
         }
     }
 
+    public Delete() {
+        return async (req: any, res: Response, next: NextFunction) => {
+            try {
+                await this.usecase.Delete(req.params.shortCode)
+
+                this.logger.Info(statusCode[statusCode.OK], {
+                    additional_info: this.http.AdditionalInfo(
+                        req,
+                        statusCode.OK
+                    ),
+                })
+
+                return res.json({ message: 'DELETED' })
+            } catch (error) {
+                return next(error)
+            }
+        }
+    }
+
     public Store() {
         return async (req: any, res: Response, next: NextFunction) => {
             try {
@@ -70,7 +89,6 @@ class Handler {
                         req,
                         statusCode.CREATED
                     ),
-                    short_links: { store: body },
                 })
                 return res.status(statusCode.CREATED).json({
                     data: {
@@ -81,6 +99,20 @@ class Handler {
             } catch (error) {
                 return next(error)
             }
+        }
+    }
+
+    public Fetch = async (req: any, res: Response, next: NextFunction) => {
+        try {
+            const request = GetRequestParams(req.query)
+            const { data, count } = await this.usecase.Fetch(request)
+            this.logger.Info(statusCode[statusCode.OK], {
+                additional_info: this.http.AdditionalInfo(req, statusCode.OK),
+            })
+
+            return res.json({ data, meta: GetMeta(request, count) })
+        } catch (error) {
+            return next(error)
         }
     }
 }
