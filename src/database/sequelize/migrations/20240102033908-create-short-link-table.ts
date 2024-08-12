@@ -49,7 +49,12 @@ export async function up(queryInterface: QueryInterface) {
             },
         })
         .then(() => {
-            return queryInterface.addIndex(tableName, ['short_code'])
+            return queryInterface.addIndex(tableName, [
+                'short_code',
+                'title',
+                'is_active',
+                'expired',
+            ])
         })
 }
 

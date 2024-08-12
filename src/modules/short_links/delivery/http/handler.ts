@@ -44,7 +44,7 @@ class Handler {
     public Show() {
         return async (req: any, res: Response, next: NextFunction) => {
             try {
-                const data = await this.usecase.Show(req.params.shortCode)
+                const data = await this.usecase.Show(req.params.id)
 
                 this.logger.Info(statusCode[statusCode.OK], {
                     additional_info: this.http.AdditionalInfo(
@@ -63,7 +63,7 @@ class Handler {
     public Delete() {
         return async (req: any, res: Response, next: NextFunction) => {
             try {
-                await this.usecase.Delete(req.params.shortCode)
+                await this.usecase.Delete(req.params.id)
 
                 this.logger.Info(statusCode[statusCode.OK], {
                     additional_info: this.http.AdditionalInfo(

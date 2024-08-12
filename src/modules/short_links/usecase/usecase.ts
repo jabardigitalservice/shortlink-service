@@ -30,8 +30,8 @@ class Usecase {
         return result
     }
 
-    public async Show(short_code: string) {
-        const result = await this.repository.FindByShortCode(short_code)
+    public async Show(id: string) {
+        const result = await this.repository.FindByID(id)
 
         if (!result)
             throw new error(
@@ -42,8 +42,8 @@ class Usecase {
         return result
     }
 
-    public async Delete(short_code: string) {
-        const result = await this.repository.Delete(short_code)
+    public async Delete(id: string) {
+        const result = await this.repository.Delete(id)
 
         if (!result)
             throw new error(

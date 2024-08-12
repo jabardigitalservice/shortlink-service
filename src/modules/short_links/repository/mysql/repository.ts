@@ -14,6 +14,12 @@ class Repository {
         return item
     }
 
+    public async FindByID(id: string) {
+        const item = await this.schema.short_link.findByPk(id)
+
+        return item
+    }
+
     public async UpdateClick(id: string) {
         await this.schema.short_link.increment('clicks', {
             by: 1,
@@ -36,33 +42,41 @@ class Repository {
         offset,
         is_active,
         keyword,
+        sort_order,
+        sort_by,
     }: RequestParams) {
         const filter = {}
+        const order = []
 
         if (is_active) Object.assign(filter, { is_active })
 
         if (keyword) {
             Object.assign(filter, {
-                [`${this.schema.Op}`]: [
+                [this.schema.Op.or]: [
                     {
                         title: {
-                            [`${this.schema.Op}`]: `%${keyword}%`,
+                            [this.schema.Op.like]: `%${keyword}%`,
                         },
                         short_code: {
-                            [`${this.schema.Op}`]: `%${keyword}%`,
+                            [this.schema.Op.like]: `%${keyword}%`,
                         },
                         url: {
-                            [`${this.schema.Op}`]: `%${keyword}%`,
+                            [this.schema.Op.like]: `%${keyword}%`,
                         },
                     },
                 ],
             })
         }
 
+        if (['created_at', 'title', 'short_code'].includes(sort_by)) {
+            order.push(...[sort_by, sort_order])
+        }
+
         const { count, rows } = await this.schema.short_link.findAndCountAll({
             limit: per_page,
             offset: offset,
             where: filter,
+            order,
         })
 
         return {
