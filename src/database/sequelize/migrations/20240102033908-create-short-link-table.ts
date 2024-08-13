@@ -11,6 +11,15 @@ export async function up(queryInterface: QueryInterface) {
                 type: DataTypes.UUID,
                 defaultValue: DataTypes.UUIDV4,
             },
+            title: {
+                type: DataTypes.STRING,
+                allowNull: true,
+            },
+            is_active: {
+                type: DataTypes.BOOLEAN,
+                allowNull: false,
+                defaultValue: true,
+            },
             short_code: {
                 type: DataTypes.STRING,
                 allowNull: false,
@@ -40,7 +49,12 @@ export async function up(queryInterface: QueryInterface) {
             },
         })
         .then(() => {
-            return queryInterface.addIndex(tableName, ['short_code'])
+            return queryInterface.addIndex(tableName, [
+                'short_code',
+                'title',
+                'is_active',
+                'expired',
+            ])
         })
 }
 

@@ -10,6 +10,15 @@ const ShortLink = (connection: Connection) => {
                 type: DataTypes.UUID,
                 defaultValue: DataTypes.UUIDV4,
             },
+            title: {
+                type: DataTypes.STRING,
+                allowNull: true,
+            },
+            is_active: {
+                type: DataTypes.BOOLEAN,
+                allowNull: false,
+                defaultValue: true,
+            },
             short_code: {
                 type: DataTypes.STRING,
                 allowNull: false,

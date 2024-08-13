@@ -1,3 +1,4 @@
+import { RequestParams } from '../../../helpers/requestParams'
 import { Translate } from '../../../helpers/translate'
 import error from '../../../pkg/error'
 import Logger from '../../../pkg/logger'
@@ -8,8 +9,8 @@ import Repository from '../repository/mysql/repository'
 class Usecase {
     constructor(private logger: Logger, private repository: Repository) {}
 
-    public async FindByShortCode(short_link: string) {
-        const result = await this.repository.FindByShortCode(short_link)
+    public async FindByShortCode(short_code: string) {
+        const result = await this.repository.FindByShortCode(short_code)
 
         if (!result)
             throw new error(
@@ -18,7 +19,6 @@ class Usecase {
             )
 
         if (result.expired && new Date(result.expired) <= new Date()) {
-            this.repository.Delete(result.id)
             throw new error(
                 statusCode.NOT_FOUND,
                 statusCode[statusCode.NOT_FOUND]
@@ -30,8 +30,20 @@ class Usecase {
         return result
     }
 
-    public async Show(short_link: string) {
-        const result = await this.repository.FindByShortCode(short_link)
+    public async Show(id: string) {
+        const result = await this.repository.FindByID(id)
+
+        if (!result)
+            throw new error(
+                statusCode.NOT_FOUND,
+                statusCode[statusCode.NOT_FOUND]
+            )
+
+        return result
+    }
+
+    public async Delete(id: string) {
+        const result = await this.repository.Delete(id)
 
         if (!result)
             throw new error(
@@ -43,8 +55,8 @@ class Usecase {
     }
 
     public async Store(body: RequestBody) {
-        if (!body.short_link) body.short_link = this.generateRandomString(6)
-        const result = await this.repository.FindByShortCode(body.short_link)
+        if (!body.short_code) body.short_code = this.generateRandomString(6)
+        const result = await this.repository.FindByShortCode(body.short_code)
 
         if (result)
             throw new error(
@@ -66,6 +78,11 @@ class Usecase {
         }
 
         return randomString
+    }
+
+    public async Fetch(request: RequestParams) {
+        const result = await this.repository.Fetch(request)
+        return result
     }
 }
 

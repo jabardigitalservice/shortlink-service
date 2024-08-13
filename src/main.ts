@@ -12,7 +12,7 @@ const main = async () => {
     const http = new Http(logger, config)
 
     // Start Load Modules
-    new ShortLinks(logger, http, config, connection)
+    new ShortLinks(logger, config, connection).RunHttp(http)
     // End Load Modules
 
     http.Run(config.app.port.http)

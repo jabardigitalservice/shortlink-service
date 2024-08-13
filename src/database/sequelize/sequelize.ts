@@ -1,6 +1,6 @@
 import { Config } from '../../config/config.interface'
 import Logger from '../../pkg/logger'
-import { Sequelize as createConnection, Dialect } from 'sequelize'
+import { Sequelize as createConnection, Dialect, Op } from 'sequelize'
 import { Connection } from './interface'
 import ShortLink from './schemas/short_link.schema'
 
@@ -47,6 +47,10 @@ class Sequalize {
         return {
             short_link,
             // Add other models if needed
+
+            // Add other require of the driver database
+            connection,
+            Op,
         }
     }
 }

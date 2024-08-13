@@ -1,14 +1,21 @@
 import Logger from '../../../../pkg/logger'
 import { RequestBody } from '../../entity/interface'
 import { Schema } from '../../../../database/sequelize/interface'
+import { RequestParams } from '../../../../helpers/requestParams'
 
 class Repository {
     constructor(private logger: Logger, private schema: Schema) {}
 
     public async FindByShortCode(short_code: string) {
         const item = await this.schema.short_link.findOne({
-            where: { short_code },
+            where: { short_code, is_active: true },
         })
+
+        return item
+    }
+
+    public async FindByID(id: string) {
+        const item = await this.schema.short_link.findByPk(id)
 
         return item
     }
@@ -21,17 +28,64 @@ class Repository {
     }
 
     public async Store(body: RequestBody) {
-        return this.schema.short_link.create({
-            url: body.url,
-            short_code: body.short_link,
-            expired: body.expired,
-        })
+        return this.schema.short_link.create(body)
     }
 
     public async Delete(id: string) {
-        await this.schema.short_link.destroy({
+        return this.schema.short_link.destroy({
             where: { id },
         })
+    }
+
+    public async Fetch({
+        limit,
+        offset,
+        is_active,
+        keyword,
+        sort_order,
+        sort_by,
+    }: RequestParams) {
+        const filter = {}
+
+        if (is_active) Object.assign(filter, { is_active })
+
+        if (keyword) {
+            Object.assign(filter, {
+                [this.schema.Op.or]: [
+                    {
+                        title: {
+                            [this.schema.Op.like]: `%${keyword}%`,
+                        },
+                    },
+                    {
+                        short_code: {
+                            [this.schema.Op.like]: `%${keyword}%`,
+                        },
+                    },
+                    {
+                        url: {
+                            [this.schema.Op.like]: `%${keyword}%`,
+                        },
+                    },
+                ],
+            })
+        }
+
+        if (!['created_at', 'title', 'short_code'].includes(sort_by)) {
+            sort_by = 'created_at'
+        }
+
+        const { count, rows } = await this.schema.short_link.findAndCountAll({
+            limit,
+            offset: offset,
+            where: filter,
+            order: [[sort_by, sort_order]],
+        })
+
+        return {
+            data: rows,
+            count,
+        }
     }
 }
 

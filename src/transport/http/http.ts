@@ -99,7 +99,7 @@ class Http {
     }
 
     private pageHome = () => {
-        this.app.get('/', (req: Request, res: Response) => {
+        this.app.get('/ping', (req: Request, res: Response) => {
             this.logger.Info('OK', {
                 additional_info: this.AdditionalInfo(req, res.statusCode),
             })

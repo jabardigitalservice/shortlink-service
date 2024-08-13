@@ -8,34 +8,35 @@ import Repository from './repository/mysql/repository'
 import Sequelize from '../../database/sequelize/sequelize'
 
 class ShortLinks {
+    private usecase: Usecase
     constructor(
         private logger: Logger,
-        private http: Http,
         private config: Config,
         connection: Connection
     ) {
         const schema = Sequelize.Schema(connection)
         const repository = new Repository(logger, schema)
-        const usecase = new Usecase(logger, repository)
-        this.loadHttp(usecase)
+        this.usecase = new Usecase(logger, repository)
     }
 
-    private loadHttp(usecase: Usecase) {
-        const handler = new Handler(this.logger, this.http, usecase)
-        this.httpPublic(handler)
-        this.httpPrivate(handler)
+    public RunHttp(http: Http) {
+        const handler = new Handler(this.logger, http, this.usecase)
+        this.httpPublic(handler, http)
+        this.httpPrivate(handler, http)
     }
 
-    private httpPublic(handler: Handler) {}
+    private httpPublic(handler: Handler, http: Http) {}
 
-    public httpPrivate(handler: Handler) {
-        const Router = this.http.Router()
+    private httpPrivate(handler: Handler, http: Http) {
+        const Router = http.Router()
 
         Router.post('/shorten', handler.Store())
+        Router.delete('/:id', handler.Delete())
         Router.get('/:shortCode', handler.RedirectLink())
-        Router.get('/:shortCode/analytic', handler.Show())
+        Router.get('/:id/detail', handler.Show())
+        Router.get('/', handler.Fetch)
 
-        this.http.SetRouter('/', Router)
+        http.SetRouter('/', Router)
     }
 }
 
