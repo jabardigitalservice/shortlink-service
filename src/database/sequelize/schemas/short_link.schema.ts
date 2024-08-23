@@ -36,6 +36,11 @@ const ShortLink = (connection: Connection) => {
                 type: DataTypes.DATE,
                 allowNull: true,
             },
+            is_random_short_code: {
+                type: DataTypes.BOOLEAN,
+                allowNull: true,
+                defaultValue: true,
+            },
         },
         {
             timestamps: true,

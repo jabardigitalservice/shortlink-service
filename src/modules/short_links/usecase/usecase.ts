@@ -1,3 +1,4 @@
+import { addDays } from 'date-fns'
 import { RequestParams } from '../../../helpers/requestParams'
 import { Translate } from '../../../helpers/translate'
 import error from '../../../pkg/error'
@@ -19,6 +20,7 @@ class Usecase {
             )
 
         if (result.expired && new Date(result.expired) <= new Date()) {
+            await this.deleteLink(result.id, result.is_random_short_code)
             throw new error(
                 statusCode.NOT_FOUND,
                 statusCode[statusCode.NOT_FOUND]
@@ -28,6 +30,10 @@ class Usecase {
         this.repository.UpdateClick(result.id)
 
         return result
+    }
+
+    private async deleteLink(id: string, is_random_short_code: boolean) {
+        if (is_random_short_code) this.repository.Delete(id)
     }
 
     public async Show(id: string) {
@@ -55,7 +61,11 @@ class Usecase {
     }
 
     public async Store(body: RequestBody) {
-        if (!body.short_code) body.short_code = this.generateRandomString(6)
+        if (!body.short_code) {
+            body.short_code = this.generateRandomString(6)
+            body.expired = addDays(new Date(), 7)
+        }
+
         const result = await this.repository.FindByShortCode(body.short_code)
 
         if (result)
