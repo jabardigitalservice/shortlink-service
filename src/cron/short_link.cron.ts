@@ -12,6 +12,7 @@ const run = async () => {
         const counter = await ShortLink(connection).destroy({
             where: {
                 expired: { [Op.not]: null, [Op.lt]: new Date() },
+                is_random_short_code: true,
             },
         })
 
