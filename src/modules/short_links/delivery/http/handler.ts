@@ -36,7 +36,7 @@ class Handler {
 
                 return res.redirect(data.url)
             } catch (error) {
-                return next(error)
+                return res.redirect('page/404')
             }
         }
     }
@@ -94,6 +94,7 @@ class Handler {
                     data: {
                         short_link:
                             this.http.GetDomain(req) + '/' + result.short_code,
+                        id: result.id,
                     },
                 })
             } catch (error) {
