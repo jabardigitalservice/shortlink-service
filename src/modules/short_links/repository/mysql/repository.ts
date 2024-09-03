@@ -14,6 +14,18 @@ class Repository {
         return item
     }
 
+    public async FindByUniq(short_code: string, id?: string) {
+        const filter = { short_code }
+
+        if (id) Object.assign(filter, { id: { [this.schema.Op.eq]: id } })
+
+        const item = await this.schema.short_link.findOne({
+            where: filter,
+        })
+
+        return item
+    }
+
     public async FindByID(id: string) {
         const item = await this.schema.short_link.findByPk(id)
 
@@ -35,6 +47,20 @@ class Repository {
         return this.schema.short_link.destroy({
             where: { id },
         })
+    }
+
+    public async Update(body: RequestBody, id: string) {
+        return this.schema.short_link.update(
+            {
+                ...body,
+                updated_at: new Date(),
+            },
+            {
+                where: {
+                    id,
+                },
+            }
+        )
     }
 
     public async Fetch({

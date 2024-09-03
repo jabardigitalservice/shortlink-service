@@ -31,6 +31,7 @@ class ShortLinks {
         const Router = http.Router()
 
         Router.post('/shorten', handler.Store())
+        Router.put('/:id', handler.Update())
         Router.delete('/:id', handler.Delete())
         Router.get('/:shortCode', handler.RedirectLink())
         Router.get('/:id/detail', handler.Show())

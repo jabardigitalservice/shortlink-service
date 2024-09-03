@@ -66,7 +66,7 @@ class Usecase {
             body.expired = addDays(new Date(), 7)
         }
 
-        const result = await this.repository.FindByShortCode(body.short_code)
+        const result = await this.repository.FindByUniq(body.short_code)
 
         if (result)
             throw new error(
@@ -75,6 +75,28 @@ class Usecase {
             )
 
         return this.repository.Store(body)
+    }
+
+    public async Update(body: RequestBody, id: string) {
+        let item = await this.repository.FindByID(id)
+
+        if (!item)
+            throw new error(
+                statusCode.NOT_FOUND,
+                statusCode[statusCode.NOT_FOUND]
+            )
+
+        item = await this.repository.FindByUniq(body.short_code, id)
+
+        if (item)
+            throw new error(
+                statusCode.BAD_REQUEST,
+                Translate('exists', { attribute: 'short_link' })
+            )
+
+        const result = await this.repository.Update(body, id)
+
+        return result
     }
 
     private generateRandomString(length: number) {

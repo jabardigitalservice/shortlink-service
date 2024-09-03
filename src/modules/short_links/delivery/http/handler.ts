@@ -103,6 +103,26 @@ class Handler {
         }
     }
 
+    public Update() {
+        return async (req: any, res: Response, next: NextFunction) => {
+            try {
+                const body = ValidateFormRequest(RequestSchema, req.body)
+                await this.usecase.Update(body, req.params.id)
+                this.logger.Info(statusCode[statusCode.OK], {
+                    additional_info: this.http.AdditionalInfo(
+                        req,
+                        statusCode.OK
+                    ),
+                })
+                return res.status(statusCode.OK).json({
+                    message: 'UPDATED',
+                })
+            } catch (error) {
+                return next(error)
+            }
+        }
+    }
+
     public Fetch = async (req: any, res: Response, next: NextFunction) => {
         try {
             const request = GetRequestParams(req.query)
