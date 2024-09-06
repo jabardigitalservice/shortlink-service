@@ -86,12 +86,12 @@ class Usecase {
                 statusCode[statusCode.NOT_FOUND]
             )
 
-        item = await this.repository.FindByUniq(body.short_code, id)
+        const short_link = await this.repository.FindByUniq(body.short_code, id)
 
-        if (item)
+        if (short_link)
             throw new error(
                 statusCode.BAD_REQUEST,
-                Translate('exists', { attribute: 'short_link' })
+                Translate('exists', { attribute: 'short_code' })
             )
 
         const result = await this.repository.Update(body, id)
