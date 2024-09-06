@@ -94,6 +94,8 @@ class Usecase {
                 Translate('exists', { attribute: 'short_code' })
             )
 
+        if (!body.short_code) body.short_code = item.short_code
+
         const result = await this.repository.Update(body, id)
 
         return result
