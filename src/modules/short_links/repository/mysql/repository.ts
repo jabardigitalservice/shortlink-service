@@ -17,7 +17,7 @@ class Repository {
     public async FindByUniq(short_code: string, id?: string) {
         const filter = { short_code }
 
-        if (id) Object.assign(filter, { id: { [this.schema.Op.eq]: id } })
+        if (id) Object.assign(filter, { id: { [this.schema.Op.ne]: id } })
 
         const item = await this.schema.short_link.findOne({
             where: filter,

@@ -71,7 +71,7 @@ class Usecase {
         if (result)
             throw new error(
                 statusCode.BAD_REQUEST,
-                Translate('exists', { attribute: 'short_link' })
+                Translate('exists', { attribute: 'short_code' })
             )
 
         return this.repository.Store(body)
