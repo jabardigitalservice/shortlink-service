@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { RegexContentTypeHtml } from './regex'
+import { RegexContentOtherFile } from './regex'
 import error from '../pkg/error'
 
 export const RemoveProcotol = (url: string) => {
@@ -18,7 +18,7 @@ export const GetObjectUrl = async (url: string) => {
         })
         const contentType = headers['content-type'] || ''
 
-        if (status === 200 && RegexContentTypeHtml.test(contentType)) return
+        if (status === 200 && RegexContentOtherFile.test(contentType)) return
 
         return {
             data: data,
